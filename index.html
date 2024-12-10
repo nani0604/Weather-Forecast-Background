@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Explorer</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="weather-container">
+      <div class="header">
+        <h1>Weather Explorer</h1>
+        <div class="location-details">
+          <span id="full-location"></span>
+        </div>
+      </div>
+
+      <div class="search-container">
+        <input type="text" id="search" placeholder="Enter city name" />
+        <button id="submit" onclick="fetchWeather()">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+
+      <div id="weather-data">
+        <div class="weather-loader">
+          <div class="loader"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="background-overlay"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
