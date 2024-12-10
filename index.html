@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weather Explorer</title>
+    <title>WeatherSphere - Advanced Weather Insights</title>
     <link rel="stylesheet" href="styles.css" />
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -12,28 +12,39 @@
   </head>
   <body>
     <div class="weather-container">
-      <div class="header">
-        <h1>Weather Explorer</h1>
-        <div class="location-details">
-          <span id="full-location"></span>
-        </div>
-      </div>
-
-      <div class="search-container">
+      <div class="search-section">
         <input type="text" id="search" placeholder="Enter city name" />
         <button id="submit" onclick="fetchWeather()">
           <i class="fas fa-search"></i>
         </button>
       </div>
 
-      <div id="weather-data">
-        <div class="weather-loader">
-          <div class="loader"></div>
+      <div class="main-content">
+        <div id="location-header">
+          <h1 id="city-name">WeatherSphere</h1>
+          <p id="location-details"></p>
+        </div>
+
+        <div id="weather-data">
+          <div class="weather-loader">
+            <div class="loader"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="additional-insights">
+        <div class="time-section">
+          <div id="current-time"></div>
+          <div id="date"></div>
+        </div>
+        <div class="geo-insights">
+          <div id="latitude"></div>
+          <div id="longitude"></div>
         </div>
       </div>
     </div>
 
-    <div class="background-overlay"></div>
+    <div class="background-layer"></div>
 
     <script src="script.js"></script>
   </body>
