@@ -1,9 +1,14 @@
-# Weather-Forecast-Background
-You get the weather details by seraching the city and the background changes accordingly to some famous places that are present in that city or any nearby distance.
-#author - Narendra Kumar Reddy Yathapu
+This project allows users to retrieve weather details by searching for a city. The background dynamically updates to showcase famous landmarks or iconic scenery associated with the city or its nearby regions.
 
-
-Api's used : 1) openWeather - used to get the weather info
-             2) Unsplash - used for getting the Background images according to the city searched for.
-
-Languages used: Html/CSS and Javascript along with Json and Api
+Features
+Real-time Weather Info: Fetch accurate weather data for any searched city.
+Dynamic Backgrounds: The background changes to display visually appealing images of landmarks or popular spots near the searched city.
+APIs Used
+OpenWeather API: Provides weather information such as temperature, humidity, and more.
+Unsplash API: Fetches stunning background images corresponding to the city searched.
+Technologies Used
+HTML/CSS: For structuring and styling the user interface.
+JavaScript: To handle interactivity and API integration.
+JSON: For managing and processing the data retrieved from APIs.
+Author
+Narendra Kumar Reddy Yathapu
