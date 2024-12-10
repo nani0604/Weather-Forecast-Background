@@ -1,23 +1,29 @@
-// Unsplash API for background images
+// API Keys
 const UNSPLASH_ACCESS_KEY = "4jMTLl9BaILd5gpFR4nA4lblWKoQgUODmKChc2OsuaE";
-
-// OpenWeatherMap API Key
 const OPENWEATHER_API_KEY = "efa106ce6c3303ff813035a6ead7b6ba";
 
 async function fetchWeather() {
   const searchInput = document.getElementById("search").value.trim();
   const weatherDataSection = document.getElementById("weather-data");
-  const backgroundOverlay = document.querySelector(".background-overlay");
-  const locationDetails = document.getElementById("full-location");
+  const backgroundLayer = document.querySelector(".background-layer");
+  const cityNameElement = document.getElementById("city-name");
+  const locationDetailsElement = document.getElementById("location-details");
+  const latitudeElement = document.getElementById("latitude");
+  const longitudeElement = document.getElementById("longitude");
+  const currentTimeElement = document.getElementById("current-time");
+  const dateElement = document.getElementById("date");
 
-  // Reset display
+  // Reset UI
   weatherDataSection.innerHTML = `
         <div class="weather-loader">
             <div class="loader"></div>
         </div>
     `;
-  locationDetails.textContent = "";
-  backgroundOverlay.style.backgroundImage = "none";
+  backgroundLayer.style.backgroundImage = "none";
+  cityNameElement.textContent = "WeatherSphere";
+  locationDetailsElement.textContent = "";
+  latitudeElement.textContent = "";
+  longitudeElement.textContent = "";
 
   if (searchInput === "") {
     showError("Please enter a city name");
@@ -25,7 +31,7 @@ async function fetchWeather() {
   }
 
   try {
-    // Geocoding API to get coordinates and full location details
+    // Geocoding to get coordinates
     const geocodeURL = `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(
       searchInput
     )}&limit=1&appid=${OPENWEATHER_API_KEY}`;
@@ -39,20 +45,29 @@ async function fetchWeather() {
 
     const { lat, lon, name, state, country } = geocodeData[0];
 
-    // Fetch background image
+    // Fetch background image (without blur)
     const backgroundImageURL = await fetchLocationImage(name, country);
-    backgroundOverlay.style.backgroundImage = `url('${backgroundImageURL}')`;
+    backgroundLayer.style.backgroundImage = `url('${backgroundImageURL}')`;
+    backgroundLayer.style.opacity = "0.3";
 
-    // Weather API to get current weather
+    // Weather data
     const weatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric`;
     const weatherResponse = await fetch(weatherURL);
     const weatherData = await weatherResponse.json();
 
-    // Update location details
-    locationDetails.textContent = `${state ? state + ", " : ""}${country}`;
+    // Additional data display
+    cityNameElement.textContent = name;
+    locationDetailsElement.textContent = `${
+      state ? state + ", " : ""
+    }${country}`;
+    latitudeElement.textContent = `Latitude: ${lat.toFixed(4)}°`;
+    longitudeElement.textContent = `Longitude: ${lon.toFixed(4)}°`;
+
+    // Update time and date
+    updateTimeAndDate();
 
     // Display weather
-    displayWeather(weatherData, name, country);
+    displayWeather(weatherData);
   } catch (error) {
     showError("An error occurred. Please try again.");
     console.error(error);
@@ -68,47 +83,95 @@ async function fetchLocationImage(city, country) {
 
     return (
       data.results[0]?.urls?.regular ||
-      `https://source.unsplash.com/500x500/?${city},${country},landmark`
+      `https://source.unsplash.com/1600x900/?${city},${country},landmark`
     );
   } catch {
-    return `https://source.unsplash.com/500x500/?${city},${country},landmark`;
+    return `https://source.unsplash.com/1600x900/?${city},${country},landmark`;
   }
 }
 
-function displayWeather(data, cityName, countryCode) {
+function displayWeather(data) {
   const weatherDataSection = document.getElementById("weather-data");
   const mainWeather = data.weather[0].main.toLowerCase();
 
   weatherDataSection.innerHTML = `
-        <div class="weather-icon ${mainWeather}">
+        <div class="weather-icon">
             <img src="https://openweathermap.org/img/wn/${
               data.weather[0].icon
-            }@2x.png" 
+            }@4x.png" 
                  alt="${data.weather[0].description}">
         </div>
         <div class="weather-details">
-            <h2>${cityName}</h2>
-            <p><strong>Temperature:</strong> ${Math.round(data.main.temp)}°C</p>
-            <p><strong>Feels Like:</strong> ${Math.round(
-              data.main.feels_like
-            )}°C</p>
-            <p><strong>Description:</strong> ${data.weather[0].description}</p>
-        </div>
-        <div class="additional-info">
-            <div class="info-item">
-                <strong>Humidity</strong>
-                <p>${data.main.humidity}%</p>
+            <div>
+                <h3>Temperature</h3>
+                <p>${Math.round(data.main.temp)}°C</p>
+                <small>Feels Like: ${Math.round(data.main.feels_like)}°C</small>
             </div>
-            <div class="info-item">
-                <strong>Wind</strong>
+            <div>
+                <h3>Weather</h3>
+                <p>${data.weather[0].description}</p>
+                <small>Humidity: ${data.main.humidity}%</small>
+            </div>
+            <div>
+                <h3>Wind</h3>
                 <p>${data.wind.speed} m/s</p>
+                <small>Direction: ${getWindDirection(data.wind.deg)}</small>
             </div>
-            <div class="info-item">
-                <strong>Pressure</strong>
+            <div>
+                <h3>Pressure</h3>
                 <p>${data.main.pressure} hPa</p>
+                <small>Sea Level</small>
             </div>
         </div>
     `;
+}
+
+function getWindDirection(degrees) {
+  const directions = [
+    "N",
+    "NNE",
+    "NE",
+    "ENE",
+    "E",
+    "ESE",
+    "SE",
+    "SSE",
+    "S",
+    "SSW",
+    "SW",
+    "WSW",
+    "W",
+    "WNW",
+    "NW",
+    "NNW",
+  ];
+  const index = Math.round(degrees / 22.5) % 16;
+  return directions[index];
+}
+
+function updateTimeAndDate() {
+  const now = new Date();
+  const currentTimeElement = document.getElementById("current-time");
+  const dateElement = document.getElementById("date");
+
+  const timeOptions = {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  };
+  const dateOptions = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+
+  currentTimeElement.textContent = now.toLocaleTimeString(
+    undefined,
+    timeOptions
+  );
+  dateElement.textContent = now.toLocaleDateString(undefined, dateOptions);
 }
 
 function showError(message) {
@@ -120,7 +183,7 @@ function showError(message) {
     `;
 }
 
-// Add event listener for Enter key
+// Event Listeners
 document
   .getElementById("search")
   .addEventListener("keypress", function (event) {
@@ -128,3 +191,7 @@ document
       fetchWeather();
     }
   });
+
+// Initial time update and periodic updates
+updateTimeAndDate();
+setInterval(updateTimeAndDate, 1000);
