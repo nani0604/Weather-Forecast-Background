@@ -1,6 +1,6 @@
 // API Keys
-const UNSPLASH_ACCESS_KEY = "Use Your Api Key here";
-const OPENWEATHER_API_KEY = "Use Your Api Key here";
+const UNSPLASH_ACCESS_KEY = "4jMTLl9BaILd5gpFR4nA4lblWKoQgUODmKChc2OsuaE";
+const OPENWEATHER_API_KEY = "efa106ce6c3303ff813035a6ead7b6ba";
 
 async function fetchWeather() {
   const searchInput = document.getElementById("search").value.trim();
